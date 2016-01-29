@@ -1,185 +1,279 @@
-describe("awesomplete.evaluate with list array", function () {
+describe("awesomplete.evaluate", function () {
 
 	$.fixture("plain");
 
-	subject(function () {
-		return new Awesomplete("#plain", { list: ["item1", "item2", "item3"] });
-	});
-
-	describe("with too short input value", function () {
-		beforeEach(function () {
-			$.type(this.subject.input, "i");
+	describe("with list as array", function () {
+		subject(function () {
+			return new Awesomplete("#plain", { list: ["item1", "item2", "item3"] });
 		});
 
-		it("closes completer", function () {
-			spyOn(this.subject, "close");
-			this.subject.evaluate();
+		describe("with too short input value", function () {
+			beforeEach(function () {
+				$.type(this.subject.input, "i");
+			});
 
-			expect(this.subject.close).toHaveBeenCalled();
-		});
-	});
+			it("closes completer", function () {
+				spyOn(this.subject, "close");
+				this.subject.evaluate();
 
-	describe("with no items found", function () {
-		beforeEach(function () {
-			$.type(this.subject.input, "nosuchitem");
-		});
-
-		it("closes completer", function () {
-			spyOn(this.subject, "close");
-			this.subject.evaluate();
-
-			expect(this.subject.close).toHaveBeenCalled();
-		});
-	});
-
-	describe("with some items found", function () {
-		beforeEach(function () {
-			$.type(this.subject.input, "ite");
+				expect(this.subject.close).toHaveBeenCalled();
+			});
 		});
 
-		it("opens completer", function () {
-			spyOn(this.subject, "open");
-			this.subject.evaluate();
+		describe("with no items found", function () {
+			beforeEach(function () {
+				$.type(this.subject.input, "nosuchitem");
+			});
 
-			expect(this.subject.open).toHaveBeenCalled();
+			it("closes completer", function () {
+				spyOn(this.subject, "close");
+				this.subject.evaluate();
+
+				expect(this.subject.close).toHaveBeenCalled();
+			});
 		});
 
-		it("fills completer with found items", function () {
-			this.subject.evaluate();
-			expect(this.subject.ul.children.length).toBe(3);
+		describe("with some items found", function () {
+			beforeEach(function () {
+				$.type(this.subject.input, "ite");
+			});
+
+			it("opens completer", function () {
+				spyOn(this.subject, "open");
+				this.subject.evaluate();
+
+				expect(this.subject.open).toHaveBeenCalled();
+			});
+
+			it("fills completer with found items", function () {
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(3);
+			});
+
+			it("shows no more than maxItems", function () {
+				this.subject.maxItems = 2;
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(2);
+			});
+
+			it("makes no item selected", function () {
+				this.subject.evaluate();
+				expect(this.subject.index).toBe(-1);
+			});
 		});
 
-		it("shows no more than maxItems", function () {
-			this.subject.maxItems = 2;
-			this.subject.evaluate();
-			expect(this.subject.ul.children.length).toBe(2);
-		});
+		describe("with minChars: 0", function () {
+			beforeEach(function () {
+				this.subject.minChars = 0;
+			});
 
-		it("makes no item selected", function () {
-			this.subject.evaluate();
-			expect(this.subject.index).toBe(-1);
-		});
-	});
+			it("opens completer", function () {
+				spyOn(this.subject, "open");
+				this.subject.evaluate();
 
-	describe("with minChars: 0", function () {
-		beforeEach(function () {
-			this.subject.minChars = 0;
-		});
+				expect(this.subject.open).toHaveBeenCalled();
+			});
 
-		it("opens completer", function () {
-			spyOn(this.subject, "open");
-			this.subject.evaluate();
+			it("fills completer with all items", function () {
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(3);
+			});
 
-			expect(this.subject.open).toHaveBeenCalled();
-		});
+			it("shows no more than maxItems", function () {
+				this.subject.maxItems = 2;
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(2);
+			});
 
-		it("fills completer with all items", function () {
-			this.subject.evaluate();
-			expect(this.subject.ul.children.length).toBe(3);
-		});
-
-		it("shows no more than maxItems", function () {
-			this.subject.maxItems = 2;
-			this.subject.evaluate();
-			expect(this.subject.ul.children.length).toBe(2);
-		});
-
-		it("makes no item selected", function () {
-			this.subject.evaluate();
-			expect(this.subject.index).toBe(-1);
-		});
-	});
-});
-
-describe("awesomplete.evaluate with list function", function () {
-
-	$.fixture("plain");
-
-	subject(function () {
-		return new Awesomplete("#plain", { list: function() { return ["item1", "item2", "item3"]; } });
-	});
-
-	describe("with too short input value", function () {
-		beforeEach(function () {
-			$.type(this.subject.input, "i");
-		});
-
-		it("closes completer", function () {
-			spyOn(this.subject, "close");
-			this.subject.evaluate();
-
-			expect(this.subject.close).toHaveBeenCalled();
+			it("makes no item selected", function () {
+				this.subject.evaluate();
+				expect(this.subject.index).toBe(-1);
+			});
 		});
 	});
 
-	describe("with no items found", function () {
-		beforeEach(function () {
-			$.type(this.subject.input, "nosuchitem");
+	describe("with list as thunk function", function () {
+		subject(function () {
+			return new Awesomplete("#plain", { list: function() { return ["item1", "item2", "item3"]; } });
 		});
 
-		it("closes completer", function () {
-			spyOn(this.subject, "close");
-			this.subject.evaluate();
+		describe("with too short input value", function () {
+			beforeEach(function () {
+				$.type(this.subject.input, "i");
+			});
 
-			expect(this.subject.close).toHaveBeenCalled();
+			it("closes completer", function () {
+				spyOn(this.subject, "close");
+				this.subject.evaluate();
+
+				expect(this.subject.close).toHaveBeenCalled();
+			});
+		});
+
+		describe("with no items found", function () {
+			beforeEach(function () {
+				$.type(this.subject.input, "nosuchitem");
+			});
+
+			it("closes completer", function () {
+				spyOn(this.subject, "close");
+				this.subject.evaluate();
+
+				expect(this.subject.close).toHaveBeenCalled();
+			});
+		});
+
+		describe("with some items found", function () {
+			beforeEach(function () {
+				$.type(this.subject.input, "ite");
+			});
+
+			it("opens completer", function () {
+				spyOn(this.subject, "open");
+				this.subject.evaluate();
+				expect(this.subject.open).toHaveBeenCalled();
+			});
+
+			it("fills completer with found items", function () {
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(3);
+			});
+
+			it("shows no more than maxItems", function () {
+				this.subject.maxItems = 2;
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(2);
+			});
+
+			it("makes no item selected", function () {
+				this.subject.evaluate();
+				expect(this.subject.index).toBe(-1);
+			});
+		});
+
+		describe("with minChars: 0", function () {
+			beforeEach(function () {
+				this.subject.minChars = 0;
+			});
+
+			it("opens completer", function () {
+				spyOn(this.subject, "open");
+				this.subject.evaluate();
+
+				expect(this.subject.open).toHaveBeenCalled();
+			});
+
+			it("fills completer with all items", function () {
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(3);
+			});
+
+			it("shows no more than maxItems", function () {
+				this.subject.maxItems = 2;
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(2);
+			});
+
+			it("makes no item selected", function () {
+				this.subject.evaluate();
+				expect(this.subject.index).toBe(-1);
+			});
 		});
 	});
 
-	describe("with some items found", function () {
-		beforeEach(function () {
-			$.type(this.subject.input, "ite");
+	describe("with list as regular function", function () {
+		subject(function () {
+			return new Awesomplete("#plain", {
+				list: function(q) {
+					return ["item", "item", "item"].filter(function(i) {
+						return i.endsWith(q);
+					});
+				}
+			});
 		});
 
-		it("opens completer", function () {
-			spyOn(this.subject, "open");
-			this.subject.evaluate();
+		describe("with too short input value", function () {
+			beforeEach(function () {
+				$.type(this.subject.input, "i");
+			});
 
-			expect(this.subject.open).toHaveBeenCalled();
+			it("closes completer", function () {
+				spyOn(this.subject, "close");
+				this.subject.evaluate();
+
+				expect(this.subject.close).toHaveBeenCalled();
+			});
 		});
 
-		it("fills completer with found items", function () {
-			this.subject.evaluate();
-			expect(this.subject.ul.children.length).toBe(3);
+		describe("with no items found", function () {
+			beforeEach(function () {
+				$.type(this.subject.input, "nosuchitem");
+			});
+
+			it("closes completer", function () {
+				spyOn(this.subject, "close");
+				this.subject.evaluate();
+
+				expect(this.subject.close).toHaveBeenCalled();
+			});
 		});
 
-		it("shows no more than maxItems", function () {
-			this.subject.maxItems = 2;
-			this.subject.evaluate();
-			expect(this.subject.ul.children.length).toBe(2);
+		describe("with some items found", function () {
+			beforeEach(function () {
+				$.type(this.subject.input, "tem");
+			});
+
+			it("opens completer", function () {
+				spyOn(this.subject, "open");
+				this.subject.evaluate();
+				expect(this.subject.open).toHaveBeenCalled();
+			});
+
+			it("fills completer with found items", function () {
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(3);
+			});
+
+			it("shows no more than maxItems", function () {
+				this.subject.maxItems = 2;
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(2);
+			});
+
+			it("makes no item selected", function () {
+				this.subject.evaluate();
+				expect(this.subject.index).toBe(-1);
+			});
 		});
 
-		it("makes no item selected", function () {
-			this.subject.evaluate();
-			expect(this.subject.index).toBe(-1);
+		describe("with minChars: 0", function () {
+			beforeEach(function () {
+				this.subject.minChars = 0;
+			});
+
+			it("opens completer", function () {
+				spyOn(this.subject, "open");
+				this.subject.evaluate();
+
+				expect(this.subject.open).toHaveBeenCalled();
+			});
+
+			it("fills completer with all items", function () {
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(3);
+			});
+
+			it("shows no more than maxItems", function () {
+				this.subject.maxItems = 2;
+				this.subject.evaluate();
+				expect(this.subject.ul.children.length).toBe(2);
+			});
+
+			it("makes no item selected", function () {
+				this.subject.evaluate();
+				expect(this.subject.index).toBe(-1);
+			});
 		});
 	});
 
-	describe("with minChars: 0", function () {
-		beforeEach(function () {
-			this.subject.minChars = 0;
-		});
-
-		it("opens completer", function () {
-			spyOn(this.subject, "open");
-			this.subject.evaluate();
-
-			expect(this.subject.open).toHaveBeenCalled();
-		});
-
-		it("fills completer with all items", function () {
-			this.subject.evaluate();
-			expect(this.subject.ul.children.length).toBe(3);
-		});
-
-		it("shows no more than maxItems", function () {
-			this.subject.maxItems = 2;
-			this.subject.evaluate();
-			expect(this.subject.ul.children.length).toBe(2);
-		});
-
-		it("makes no item selected", function () {
-			this.subject.evaluate();
-			expect(this.subject.index).toBe(-1);
-		});
-	});
 });
