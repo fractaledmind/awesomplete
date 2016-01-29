@@ -115,8 +115,11 @@ _.prototype = {
 		else if (typeof list === "string" && list.indexOf(",") > -1) {
 				this._list = list.split(/\s*,\s*/);
 		}
-		else if (typeof list === "function") {
-				this._list = list();
+		else if ($.isFunction(list) && list.length == 0) {
+			this._list = list();
+		}
+		else if ($.isFunction(list) && list.length > 0) {
+			this._list = list('');
 		}
 		else { // Element or CSS selector
 			list = $(list);
