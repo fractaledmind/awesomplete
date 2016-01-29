@@ -107,6 +107,8 @@ var _ = function (input, o) {
 
 _.prototype = {
 	set list(list) {
+		this._source = list;
+
 		if (Array.isArray(list)) {
 			this._list = list;
 		}
