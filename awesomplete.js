@@ -212,15 +212,24 @@ _.prototype = {
 		var me = this;
 		var value = this.input.value;
 
-		if (value.length >= this.minChars && this._list.length > 0) {
+		if (value.length < this.minChars) { this.close(); return null; }
+
+		if ($.isFunction(this._source) && this._source.length > 0) {
+			this.suggestions = this._source(value);
+		}
+		else {
+			this.suggestions = this._list
+				.filter(function(item) {
+					return me.filter(item, value);
+				});
+		}
+
+		if (this.suggestions.length > 0) {
 			this.index = -1;
 			// Populate list with options that match
 			this.ul.innerHTML = "";
 
-			this._list
-				.filter(function(item) {
-					return me.filter(item, value);
-				})
+			this.suggestions
 				.sort(this.sort)
 				.every(function(text, i) {
 					me.ul.appendChild(me.item(text, value));
