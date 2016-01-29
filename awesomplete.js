@@ -113,7 +113,7 @@ _.prototype = {
 			this._list = list;
 		}
 		else if (typeof list === "string" && list.indexOf(",") > -1) {
-				this._list = list.split(/\s*,\s*/);
+			this._list = list.split(/\s*,\s*/);
 		}
 		else if ($.isFunction(list) && list.length == 0) {
 			this._list = list();
