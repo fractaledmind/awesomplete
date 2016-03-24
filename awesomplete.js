@@ -268,6 +268,9 @@ _.prototype = {
 		if (!(this.opened)) {
 			this.open();
 		}
+		if (this.autoFirst && this.index === -1) {
+			this.goto(0);
+		}
 	},
 
 	evaluate: function() {
