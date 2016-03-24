@@ -326,12 +326,13 @@ _.prototype = {
 
 _.all = [];
 
-_.FILTER_CONTAINS = function (text, input) {
-	return RegExp(_.regExpEscape(input.trim()), "i").test(text);
+_.FILTER_CONTAINS = function (item, input) {
+	return RegExp(_.regExpEscape(input.trim()), "i").test(item);
+};
 };
 
-_.FILTER_STARTSWITH = function (text, input) {
-	return RegExp("^" + _.regExpEscape(input.trim()), "i").test(text);
+_.FILTER_ENDSWITH = function (item, input) {
+	return RegExp(_.regExpEscape(input.trim()) + "$", "i").test(item);
 };
 
 _.SORT_BYLENGTH = function (a, b) {
@@ -342,8 +343,13 @@ _.SORT_BYLENGTH = function (a, b) {
 	return a < b? -1 : 1;
 };
 
-_.ITEM = function (text, input) {
-	var html = input === '' ? text : text.replace(RegExp(_.regExpEscape(input.trim()), "gi"), "<mark>$&</mark>");
+_.ITEM = function (item, input) {
+	var html =
+		input === "" ?
+		item :
+		item.replace(
+			RegExp(_.regExpEscape(input.trim()), "gi"),
+			"<mark>$&</mark>");
 	return Bliss.create("li", {
 		innerHTML: html,
 		"aria-selected": "false"
