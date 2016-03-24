@@ -125,7 +125,7 @@ _.prototype = {
 			this._list = list;
 		}
 		else if (typeof list === "string" && list.indexOf(",") > -1) {
-				this._list = list.split(/\s*,\s*/);
+			this._list = list.split(/\s*,\s*/);
 		}
 		else { // Element or CSS selector
 			list = Bliss(list);
@@ -297,7 +297,7 @@ _.prototype = {
 						/^(?!url)/)
 				).then(function(xhr) {
 					if(xhr.response) {
-						var suggestions = Bliss.type(xhr.response) == 'string' ?
+						var suggestions = Bliss.type(xhr.response) == "string" ?
 							JSON.parse(xhr.response) :
 							xhr.response;
 						me.suggest(
