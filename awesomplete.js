@@ -232,6 +232,9 @@ _.prototype = {
 		selected = selected || this.dropdown.children[this.index];
 
 		if (selected && this.suggestions) {
+			Bliss.$(this.dropdown.children).forEach(function (unselected) {
+				unselected.setAttribute("aria-selected", "false");
+			});
 			selected.setAttribute("aria-selected", "true");
 			var allowed = Bliss.fire(this.input, "awesomplete-select", {
 				text: selected.textContent,
