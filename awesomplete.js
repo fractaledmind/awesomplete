@@ -17,7 +17,6 @@ var _ = function (input, o) {
 		"autocomplete": "off",
 		"aria-autocomplete": "list"
 	});
-	this.showHint = this.input.classList.contains('show-hint');
 
 	o = o || {};
 
@@ -32,10 +31,12 @@ var _ = function (input, o) {
 		sort: _.SORT_BYLENGTH,
 		item: _.ITEM,
 		replace: _.REPLACE,
-		hint: _.HINT
+		hint: _.HINT,
+		showHint: false
 	}, Bliss.extend(o, _.data(this.input))));
 
 	this.index = -1;
+	this.showHint = this.showHint || this.input.classList.contains('show-hint');
 
 	// Create necessary elements
 	this.container = this.container['subject'] && this.container.subject instanceof Element ?
