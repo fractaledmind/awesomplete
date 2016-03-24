@@ -329,6 +329,9 @@ _.all = [];
 _.FILTER_CONTAINS = function (item, input) {
 	return RegExp(_.regExpEscape(input.trim()), "i").test(item);
 };
+
+_.FILTER_STARTSWITH = function (item, input) {
+	return RegExp("^" + _.regExpEscape(input.trim()), "i").test(item);
 };
 
 _.FILTER_ENDSWITH = function (item, input) {
