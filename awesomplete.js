@@ -34,7 +34,6 @@ var _ = function (input, o) {
 	}, o);
 
 	this.index = -1;
-	this.showHint = this.showHint || this.input.classList.contains('show-hint');
 
 	// Create necessary elements
 	this.container = this.input.getAttribute("data-container") || o.container || null;
@@ -51,11 +50,10 @@ var _ = function (input, o) {
 	);
 
 	if (this.showHint) {
-		this.hint_input = Bliss.create("input",
+		this.hintInput = Bliss.create("input",
 			{
 				disabled: "disabled",
 				type: "text",
-				className: "form-control",
 				inside: Bliss.create("div",
 								 { className: "awesomplete-inputs", around: this.input })
 			}
@@ -223,9 +221,7 @@ _.prototype = {
 		if (i > -1 && lis.length > 0) {
 			lis[i].setAttribute("aria-selected", "true");
 			lis[i].scrollIntoView(false);
-			if (this.showHint) {
-				this.hint_input.value = this.hint(lis[i]);
-			}
+			if (this.showHint) this.hintInput.value = this.hint(lis[i]);
 			this.status.textContent = lis[i].textContent;
 		}
 
@@ -245,7 +241,7 @@ _.prototype = {
 
 			if (allowed) {
 				this.replace(selected);
-				this.hint_input.value = '';
+				if (this.showHint) this.hintInput.value = "";
 				this.close();
 				Bliss.fire(this.input, "awesomplete-selectcomplete");
 			}
@@ -260,6 +256,7 @@ _.prototype = {
 		// Reset
 		this.index = -1;
 		this.ul.innerHTML = "";
+		if (this.showHint) this.hintInput.value = "";
 
 		suggestions.forEach(function(text) {
 			me.ul.appendChild(me.item(text, value));
