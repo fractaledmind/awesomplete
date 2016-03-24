@@ -373,6 +373,49 @@ _.data = function (element) {
 		}
 	});
 	return data;
+_.getElement = function(element) {
+	var _element = null;
+	if (_.isSelectorOrElement(element)) {
+		_element = Bliss(element);
+	}
+	else if (Bliss.type(element) === "object") {
+		if (element["subject"] && _.isSelectorOrElement(element.subject)) {
+			_element = Bliss(element.subject);
+		}
+	}
+
+	return _element;
+}
+
+_.setElement = function(element, defaults) {
+	var _element = null;
+	if (_.isSelectorOrElement(element)) {
+		_element = Bliss.set(Bliss(element),
+												 defaults);
+	}
+	else if (Bliss.type(element) === "object") {
+		if (element["subject"] && _.isSelectorOrElement(element.subject)) {
+			_element = Bliss.set(Bliss(element.subject),
+													 Bliss.extend(defaults, element, /^(?!subject)/));
+		}
+	}
+
+	return _element;
+}
+
+_.isSelectorOrElement = function (subject) {
+	var _type = Bliss.type(subject);
+	return _type == "string" ||
+		_.FILTER_STARTSWITH(_type, "html") && _.FILTER_ENDSWITH(_type, "element");
+}
+
+_.addClassName = function (element, className) {
+	if (element) {
+		return element.className.split(" ").indexOf(className) === -1 ?
+			element.className.split(" ").concat([className]).join(" ") :
+			element.className;
+	}
+	return className;
 }
 
 _.regExpEscape = function (s) {
