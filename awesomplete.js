@@ -37,34 +37,8 @@ var _ = function (input, o) {
 	this.showHint = this.showHint || this.input.classList.contains('show-hint');
 
 	// Create necessary elements
-	this.container = this.container['subject'] && this.container.subject instanceof Element ?
-		Bliss.set(this.container.subject,
-							Bliss.extend(
-								{ className:
-									this.container.subject.className.split(' ').indexOf("awesomplete") === -1 ?
-									this.container.subject.className.split(' ').concat(["awesomplete"]).join(' ') :
-									this.container.subject.className
-								},
-								this.container,
-								/^(?!subject)/)) :
-		Bliss.create("div",
-								 Bliss.extend(
-									{ className: "awesomplete", around: this.input },
-									this.container)
-	);
-
-	this.ul = this.ul['subject'] && this.ul.subject instanceof Element ?
-		Bliss.set(this.ul.subject,
-							Bliss.extend(
-								{hidden: "hidden"},
-								this.ul,
-								/^(?!subject)/)) :
-		Bliss.create("ul",
-								 Bliss.extend(
-									{hidden: "hidden", inside: this.container},
-									this.ul)
-	);
-
+	this.container = this.input.getAttribute("data-container") || o.container || null;
+	this.dropdown = this.input.getAttribute("data-dropdown") || o.dropdown || null;
 	this.status = Bliss(".visually-hidden", this.container) instanceof Element ?
 		Bliss(".visually-hidden", this.container) :
 		Bliss.create("span", {
@@ -168,6 +142,35 @@ _.prototype = {
 		if (document.activeElement === this.input) {
 			this.evaluate();
 		}
+	},
+
+	set container(container) {
+		var element = _.getElement(container);
+		this._container = _.setElement(container,
+												{className: _.addClassName(element, "awesomplete-container")});
+		if (!(this._container)) {
+			this._container = Bliss.create("div",
+													Bliss.extend(
+														{ className: "awesomplete-container", around: this.input },
+														container));
+		}
+	},
+	get container() {
+		return this._container;
+	},
+
+	set dropdown(dropdown) {
+		this._dropdown = _.setElement(dropdown, {hidden: "hidden"});
+		if (!(this._dropdown)) {
+			this._dropdown = Bliss.create("ul",
+												 Bliss.extend(
+													{hidden: "hidden", inside: this.container},
+													dropdown)
+			);
+		}
+	},
+	get dropdown() {
+		return this._dropdown
 	},
 
 	get selected() {
