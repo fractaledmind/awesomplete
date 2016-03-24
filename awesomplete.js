@@ -90,7 +90,7 @@ var _ = function (input, o) {
 		"submit": this.close.bind(this)
 	});
 
-	Bliss.events(this.ul, {
+	Bliss.events(this.dropdown, {
 		"mousedown": function(evt) {
 			var li = evt.target;
 
@@ -176,18 +176,18 @@ _.prototype = {
 	},
 
 	get opened() {
-		return !this.ul.hasAttribute("hidden");
+		return !this.dropdown.hasAttribute("hidden");
 	},
 
 	close: function () {
-		this.ul.setAttribute("hidden", "");
+		this.dropdown.setAttribute("hidden", "");
 		this.index = -1;
 
 		Bliss.fire(this.input, "awesomplete-close");
 	},
 
 	open: function () {
-		this.ul.removeAttribute("hidden");
+		this.dropdown.removeAttribute("hidden");
 
 		if (this.autoFirst && this.index === -1) {
 			this.goto(0);
@@ -197,20 +197,20 @@ _.prototype = {
 	},
 
 	next: function () {
-		var count = this.ul.children.length;
+		var count = this.dropdown.children.length;
 
 		this.goto(this.index < count - 1? this.index + 1 : -1);
 	},
 
 	previous: function () {
-		var count = this.ul.children.length;
+		var count = this.dropdown.children.length;
 
 		this.goto(this.selected? this.index - 1 : count - 1);
 	},
 
 	// Should not be used, highlights specific item without any checks!
 	goto: function (i) {
-		var lis = this.ul.children;
+		var lis = this.dropdown.children;
 
 		if (this.selected) {
 			lis[this.index].setAttribute("aria-selected", "false");
@@ -229,7 +229,7 @@ _.prototype = {
 	},
 
 	select: function (selected, origin) {
-		selected = selected || this.ul.children[this.index];
+		selected = selected || this.dropdown.children[this.index];
 
 		if (selected) {
 			selected.setAttribute("aria-selected", "true");
@@ -255,14 +255,14 @@ _.prototype = {
 
 		// Reset
 		this.index = -1;
-		this.ul.innerHTML = "";
+		this.dropdown.innerHTML = "";
 		if (this.showHint) this.hintInput.value = "";
 
 		suggestions.forEach(function(text) {
-			me.ul.appendChild(me.item(text, value));
+			me.dropdown.appendChild(me.item(text, value));
 		});
 
-		if (this.ul.children.length === 0) {
+		if (this.dropdown.children.length === 0) {
 			this.close();
 		}
 		if (!(this.opened)) {
