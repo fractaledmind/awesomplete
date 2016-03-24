@@ -19,21 +19,19 @@ var _ = function (input, o) {
 	});
 
 	o = o || {};
-
-	Bliss.extend(this, Bliss.extend({
+	configure(this, {
 		minChars: 2,
 		maxItems: 10,
 		autoFirst: false,
+		showHint: false,
 		source: null,
-		container: {},
-		ul: {},
-		filter: _.FILTER_CONTAINS,
+		data: _.DATA,
+		filter: _.FILTER_STARTSWITH,
 		sort: _.SORT_BYLENGTH,
 		item: _.ITEM,
 		replace: _.REPLACE,
 		hint: _.HINT,
-		showHint: false
-	}, Bliss.extend(o, _.data(this.input))));
+	}, o);
 
 	this.index = -1;
 	this.showHint = this.showHint || this.input.classList.contains('show-hint');
