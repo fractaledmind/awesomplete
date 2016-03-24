@@ -362,17 +362,30 @@ _.HINT = function (item) {
 
 var slice = Array.prototype.slice;
 
-_.data = function (element) {
-	var data = {};
-	[].forEach.call(element.attributes, function(attr) {
-		if (/^data-/.test(attr.name)) {
-			var camelCaseName = attr.name.substr(5).replace(/-(.)/g, function ($0, $1) {
-				return $1.toUpperCase();
-			});
-			data[camelCaseName] = attr.value;
+function configure(instance, properties, o) {
+	for (var i in properties) {
+		var initial = properties[i],
+				attrValue = instance.input.getAttribute("data-" + i.toLowerCase());
+
+		if (typeof initial === "number") {
+			instance[i] = parseInt(attrValue);
 		}
-	});
-	return data;
+		else if (initial === false) { // Boolean options must be false by default anyway
+			instance[i] = attrValue !== null;
+		}
+		else if (initial instanceof Function) {
+			instance[i] = null;
+		}
+		else {
+			instance[i] = attrValue;
+		}
+
+		if (!instance[i] && instance[i] !== 0) {
+			instance[i] = (i in o)? o[i] : initial;
+		}
+	}
+}
+
 _.getElement = function(element) {
 	var _element = null;
 	if (_.isSelectorOrElement(element)) {
